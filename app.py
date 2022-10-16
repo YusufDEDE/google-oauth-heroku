@@ -118,7 +118,7 @@ def oauth2callback():
     print(state)
 
     # flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(CLIENT_SECRETS_FILE, scopes=None, state=state)
-    flow = google_auth_oauthlib.flow.Flow.from_client_config(client_config=client_secret, scopes=SCOPES)
+    flow = google_auth_oauthlib.flow.Flow.from_client_config(client_config=client_secret, scopes=None)
     flow.redirect_uri = flask.url_for('oauth2callback', _external=True)
 
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
