@@ -18,25 +18,24 @@ config = Config()
 # information for this application, including its client_id and client_secret.1
 CLIENT_SECRETS_FILE = "client_secret.json"
 
+client_secret: dict = {
+    "web": {
+        "client_id": config.CLIENT_ID,
+        "project_id": config.PROJECT_ID,
+        "auth_uri": config.AUTH_URI,
+        "token_uri": config.TOKEN_URI,
+        "auth_provider_x509_cert_url": config.AUTH_PROVIDER_X509_CERT_URL,
+        "client_secret": config.CLIENT_SECRET,
+        "redirect_uris": [
+            config.REDIRECT_URIS,
+        ],
+        "javascript_origins": [
+            config.JAVASCRIPT_ORIGINS,
+        ]
+    }
+}
 
 def generate_client_secrets_file():
-    client_secret: dict = {
-        "web": {
-            "client_id": config.CLIENT_ID,
-            "project_id": config.PROJECT_ID,
-            "auth_uri": config.AUTH_URI,
-            "token_uri": config.TOKEN_URI,
-            "auth_provider_x509_cert_url": config.AUTH_PROVIDER_X509_CERT_URL,
-            "client_secret": config.CLIENT_SECRET,
-            "redirect_uris": [
-                config.REDIRECT_URIS,
-            ],
-            "javascript_origins": [
-                config.JAVASCRIPT_ORIGINS,
-            ]
-        }
-    }
-
     with open(CLIENT_SECRETS_FILE, 'w') as f:
         json.dump(client_secret, f)
 
@@ -85,8 +84,9 @@ def test_api_request():
 def authorize():
     print(request.remote_addr)
     # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        CLIENT_SECRETS_FILE, scopes=SCOPES)
+
+    flow = google_auth_oauthlib.flow.Flow.from_client_config(client_config=client_secret, scopes=SCOPES)
+    # flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file( CLIENT_SECRETS_FILE, scopes=SCOPES)
 
     # The URI created here must exactly match one of the authorized redirect URIs
     # for the OAuth 2.0 client, which you configured in the API Console. If this
